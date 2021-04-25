@@ -2,7 +2,7 @@ from conans import ConanFile, tools
 
 
 class ConanConfiguration(ConanFile):
-    #requires = ""
+    #requires = "glog/0.4.0"
     name = "library-exqudens-cpp-test"
     version = "1.0.0"
     settings = "os", "compiler", "build_type", "arch"

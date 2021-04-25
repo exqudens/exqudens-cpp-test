@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project("library-${CMAKE_PROJECT_NAME}" VERSION ${CMAKE_PROJECT_VERSION})
+project("test-${CMAKE_PROJECT_NAME}" VERSION ${CMAKE_PROJECT_VERSION})
 
 message(STATUS "project: ${PROJECT_NAME}-${PROJECT_VERSION}")
 
@@ -15,7 +15,6 @@ if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
     return()
 endif()
 include("${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
-conan_basic_setup()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
@@ -31,15 +30,15 @@ SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(${PROJECT_NAME}-interface-executable "src/test/cpp/main.cpp")
-target_link_libraries(${PROJECT_NAME}-interface PRIVATE
-    ${CONAN_LIBS}
+add_executable(integration-tests-interface-executable "src/test/cpp/main.cpp")
+target_include_directories(integration-tests-interface-executable PRIVATE
+    ${CONAN_INCLUDE_DIRS}
 )
 
 add_custom_target(integration-tests
     COMMAND "${CMAKE_COMMAND}"
             -E env PATH="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
-            $<TARGET_FILE:${PROJECT_NAME}-interface-executable> -ff -t all
+            $<TARGET_FILE:integration-tests-interface-executable> -ff -t all
     WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
     COMMENT "Run: '${PROJECT_NAME}-interface-executable'"
 )

@@ -22,7 +22,6 @@ add_custom_target(library-conan-export-testing
 add_custom_target(library-conan-export
     COMMAND "${CMAKE_CONAN_PROGRAM}"
             export-pkg
-            -f
             "${CMAKE_CURRENT_SOURCE_DIR}"
             --package-folder="${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}-${PROJECT_VERSION}"
 )
@@ -32,7 +31,6 @@ if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
     return()
 endif()
 include("${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
-conan_basic_setup()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
@@ -55,8 +53,8 @@ target_include_directories(${PROJECT_NAME}-interface INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp>
     $<INSTALL_INTERFACE:${PROJECT_NAME}-${PROJECT_VERSION}/include>
 )
-target_link_libraries(${PROJECT_NAME}-interface INTERFACE
-    ${CONAN_LIBS}
+target_include_directories(${PROJECT_NAME}-interface INTERFACE
+    ${CONAN_INCLUDE_DIRS}
 )
 
 install(
