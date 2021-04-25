@@ -3,7 +3,9 @@ project("exqudens-cpp-test" VERSION 1.0.0)
 
 message(STATUS "project: ${PROJECT_NAME}-${PROJECT_VERSION}")
 
-set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/install")
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/install" CACHE PATH "..." FORCE)
+endif()
 
 add_subdirectory("library-${CMAKE_PROJECT_NAME}")
 add_subdirectory("test-${CMAKE_PROJECT_NAME}")
