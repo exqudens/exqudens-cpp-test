@@ -1,0 +1,74 @@
+cmake_minimum_required(VERSION 3.20)
+project("library-${CMAKE_PROJECT_NAME}" VERSION ${CMAKE_PROJECT_VERSION})
+
+message(STATUS "project: ${PROJECT_NAME}-${PROJECT_VERSION}")
+
+add_custom_target(library-conan-install
+    COMMAND "${CMAKE_CONAN_PROGRAM}"
+            install
+            "${CMAKE_CURRENT_SOURCE_DIR}"
+            --install-folder="${CMAKE_CURRENT_BINARY_DIR}"
+)
+
+add_custom_target(library-conan-export-testing
+    COMMAND "${CMAKE_CONAN_PROGRAM}"
+            export-pkg
+            -f
+            "${CMAKE_CURRENT_SOURCE_DIR}"
+            test-user/test-channel
+            --package-folder="${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}-${PROJECT_VERSION}"
+)
+
+add_custom_target(library-conan-export
+    COMMAND "${CMAKE_CONAN_PROGRAM}"
+            export-pkg
+            -f
+            "${CMAKE_CURRENT_SOURCE_DIR}"
+            --package-folder="${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}-${PROJECT_VERSION}"
+)
+
+if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
+    message(WARNING "WARNING: not exists '${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake'")
+    return()
+endif()
+include("${CMAKE_CURRENT_BINARY_DIR}/conanbuildinfo.cmake")
+conan_basic_setup()
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}")
+
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
+SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}")
+
+set(CMAKE_CXX_STANDARD 20)
+
+add_library(${PROJECT_NAME}-interface INTERFACE
+    "src/main/cpp/exqudens/test/Application.hpp"
+)
+target_include_directories(${PROJECT_NAME}-interface INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp>
+    $<INSTALL_INTERFACE:${PROJECT_NAME}-${PROJECT_VERSION}/include>
+)
+target_link_libraries(${PROJECT_NAME}-interface INTERFACE
+    ${CONAN_LIBS}
+)
+
+install(
+    TARGETS ${PROJECT_NAME}-interface
+    INCLUDES DESTINATION "${PROJECT_NAME}-${PROJECT_VERSION}/include"
+    RUNTIME DESTINATION "${PROJECT_NAME}-${PROJECT_VERSION}/bin"
+    LIBRARY DESTINATION "${PROJECT_NAME}-${PROJECT_VERSION}/lib"
+    ARCHIVE DESTINATION "${PROJECT_NAME}-${PROJECT_VERSION}/lib"
+)
+
+install(
+    DIRECTORY "src/main/cpp/"
+    DESTINATION "${PROJECT_NAME}-${PROJECT_VERSION}/include"
+    FILES_MATCHING PATTERN "*.hpp"
+)
