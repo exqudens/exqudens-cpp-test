@@ -68,7 +68,16 @@ namespace exqudens::test {
     Set<String> testNames = std::get<2>(config);
 
     if (helpRequested) {
-      cout << "Usage: -h" << endl;
+      String usage("Usage:");
+      usage += " ";
+      usage += "[" + SHORT_OPTION_HELP + " | " + LONG_OPTION_HELP + "]";
+      usage += " ";
+      usage += "[" + SHORT_OPTION_FAIL_FAST + " | " + LONG_OPTION_FAIL_FAST + "]";
+      usage += " ";
+      usage += SHORT_OPTION_TESTS + " | " + LONG_OPTION_TESTS;
+      usage += " ";
+      usage += VALUE_ALL_TESTS + " | names...";
+      cout << usage << endl;
     } else {
       for (auto& [name, value] : testMap) {
         if (testNames.contains(name)) {
