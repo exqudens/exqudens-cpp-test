@@ -74,7 +74,11 @@ if(DEFINED CONAN_PROGRAM)
     )
         set(CONAN_SETTINGS ${CONAN_SETTINGS} --settings "compiler=gcc")
         set(CONAN_SETTINGS ${CONAN_SETTINGS} --settings "compiler.version=10")
-        set(CONAN_SETTINGS ${CONAN_SETTINGS} --settings "compiler.libcxx=libstdc++11")
+        if("${CMAKE_CXX_STANDARD}" GREATER_EQUAL "11")
+            set(CONAN_SETTINGS ${CONAN_SETTINGS} --settings "compiler.libcxx=libstdc++11")
+        else()
+            set(CONAN_SETTINGS ${CONAN_SETTINGS} --settings "compiler.libcxx=libstdc++")
+        endif()
     else()
         message(FATAL_ERROR "Unsupported CMAKE_CXX_COMPILER_ID: '${CMAKE_CXX_COMPILER_ID}' and CMAKE_CONAN_SETTINGS_COMPILER_VERSION: '${CMAKE_CONAN_SETTINGS_COMPILER_VERSION}'")
     endif()
@@ -91,7 +95,9 @@ if(DEFINED CONAN_PROGRAM)
         set(CONAN_OPTIONS_SHARED "False")
     endif()
 
-    set(CONAN_OPTIONS --options "shared=${CONAN_OPTIONS_SHARED}")
+    set(CONAN_OPTIONS
+        --options "shared=${CONAN_OPTIONS_SHARED}"
+    )
 
     add_custom_target("${PROJECT_NAME}-conan-export-testing"
         COMMAND "${CONAN_PROGRAM}"

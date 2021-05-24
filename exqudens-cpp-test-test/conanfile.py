@@ -11,6 +11,7 @@ class ConanConfiguration(ConanFile):
         "exqudens-cpp-test-lib/1.0.0@test-user/test-channel"
     ]
     settings = "arch", "os", "compiler", "build_type"
+    options = {"shared": [True, False]}
 
     def imports(self):
         self.copy(pattern="*", folder=True)
