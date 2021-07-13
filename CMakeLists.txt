@@ -73,3 +73,10 @@ endif()
 add_subdirectory("${PROJECT_NAME}-lib")
 add_subdirectory("${PROJECT_NAME}-test")
 add_subdirectory("${PROJECT_NAME}-package-test")
+
+set_targets("${PROJECT_NAME}_TARGETS")
+
+add_custom_target("targets"
+    COMMAND "${CMAKE_COMMAND}" -E echo ${${PROJECT_NAME}_TARGETS}
+    VERBATIM
+)
