@@ -1,0 +1,221 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20
+  },
+  "configurePresets": [
+    {
+      "name": "release-shared",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Release"
+        },
+        "BUILD_SHARED_LIBS": {
+          "type": "BOOL",
+          "value": true
+        },
+        "CMAKE_MSVC_RUNTIME_LIBRARY": {
+          "type": "STRING",
+          "value": "MultiThreadedDLL"
+        }
+      }
+    },
+    {
+      "name": "release-static",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Release"
+        },
+        "BUILD_SHARED_LIBS": {
+          "type": "BOOL",
+          "value": false
+        },
+        "CMAKE_MSVC_RUNTIME_LIBRARY": {
+          "type": "STRING",
+          "value": "MultiThreaded"
+        }
+      }
+    },
+    {
+      "name": "windows-ninja-msvc",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_AR": {
+          "type": "FILEPATH",
+          "value": "lib.exe"
+        },
+        "CMAKE_CXX_COMPILER": {
+          "type": "FILEPATH",
+          "value": "cl.exe"
+        },
+        "CMAKE_C_COMPILER": {
+          "type": "FILEPATH",
+          "value": "cl.exe"
+        },
+        "CMAKE_LINKER": {
+          "type": "FILEPATH",
+          "value": "link.exe"
+        },
+        "CMAKE_MT": {
+          "type": "FILEPATH",
+          "value": "mt.exe"
+        },
+        "CMAKE_RC_COMPILER": {
+          "type": "FILEPATH",
+          "value": "rc.exe"
+        }
+      }
+    },
+    {
+      "name": "windows-ninja-gcc",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_AR": {
+          "type": "FILEPATH",
+          "value": "ar.exe"
+        },
+        "CMAKE_CXX_COMPILER": {
+          "type": "FILEPATH",
+          "value": "g++.exe"
+        },
+        "CMAKE_C_COMPILER": {
+          "type": "FILEPATH",
+          "value": "gcc.exe"
+        },
+        "CMAKE_LINKER": {
+          "type": "FILEPATH",
+          "value": "ld.exe"
+        },
+        "CMAKE_MT": {
+          "type": "FILEPATH",
+          "value": ""
+        },
+        "CMAKE_RC_COMPILER": {
+          "type": "FILEPATH",
+          "value": "windres.exe"
+        }
+      }
+    },
+    {
+      "name": "vs-host-x86-target-x86",
+      "hidden": true,
+      "generator": "Ninja",
+      "toolset": {
+        "value": "host=x86",
+        "strategy": "external"
+      },
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ]
+        }
+      }
+    },
+    {
+      "name": "vs-host-x64-target-x64",
+      "hidden": true,
+      "generator": "Ninja",
+      "toolset": {
+        "value": "host=x64",
+        "strategy": "external"
+      },
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ]
+        }
+      }
+    },
+    {
+      "name": "ide-vs-host-x86-target-x86-release-shared",
+      "inherits": [ "vs-host-x86-target-x86", "release-shared" ],
+      "binaryDir": "${sourceDir}/vs-build/0"
+    },
+    {
+      "name": "ide-vs-host-x86-target-x86-release-static",
+      "inherits": [ "vs-host-x86-target-x86", "release-static" ],
+      "binaryDir": "${sourceDir}/vs-build/1"
+    },
+    {
+      "name": "ide-vs-host-x64-target-x64-release-shared",
+      "inherits": [ "vs-host-x64-target-x64", "release-shared" ],
+      "binaryDir": "${sourceDir}/vs-build/2"
+    },
+    {
+      "name": "ide-vs-host-x64-target-x64-release-static",
+      "inherits": [ "vs-host-x64-target-x64", "release-static" ],
+      "binaryDir": "${sourceDir}/vs-build/3"
+    },
+    {
+      "name": "cmd-windows-ninja-msvc-release-shared",
+      "inherits": [ "windows-ninja-msvc", "release-shared" ],
+      "binaryDir": "${sourceDir}/build/0"
+    },
+    {
+      "name": "cmd-windows-ninja-msvc-release-static",
+      "inherits": [ "windows-ninja-msvc", "release-static" ],
+      "binaryDir": "${sourceDir}/build/1"
+    },
+    {
+      "name": "cmd-windows-ninja-gcc-release-shared",
+      "inherits": [ "windows-ninja-gcc", "release-shared" ],
+      "binaryDir": "${sourceDir}/build/2"
+    },
+    {
+      "name": "cmd-windows-ninja-gcc-release-static",
+      "inherits": [ "windows-ninja-gcc", "release-static" ],
+      "binaryDir": "${sourceDir}/build/3"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "ide-vs-host-x86-target-x86-release-shared",
+      "configurePreset": "ide-vs-host-x86-target-x86-release-shared"
+    },
+    {
+      "name": "ide-vs-host-x86-target-x86-release-static",
+      "configurePreset": "ide-vs-host-x86-target-x86-release-static"
+    },
+    {
+      "name": "ide-vs-host-x64-target-x64-release-shared",
+      "configurePreset": "ide-vs-host-x64-target-x64-release-shared"
+    },
+    {
+      "name": "ide-vs-host-x64-target-x64-release-static",
+      "configurePreset": "ide-vs-host-x64-target-x64-release-static"
+    },
+    {
+      "name": "cmd-windows-ninja-msvc-release-shared",
+      "configurePreset": "cmd-windows-ninja-msvc-release-shared"
+    },
+    {
+      "name": "cmd-windows-ninja-msvc-release-static",
+      "configurePreset": "cmd-windows-ninja-msvc-release-static"
+    },
+    {
+      "name": "cmd-windows-ninja-gcc-release-shared",
+      "configurePreset": "cmd-windows-ninja-gcc-release-shared"
+    },
+    {
+      "name": "cmd-windows-ninja-gcc-release-static",
+      "configurePreset": "cmd-windows-ninja-gcc-release-static"
+    }
+  ]
+}

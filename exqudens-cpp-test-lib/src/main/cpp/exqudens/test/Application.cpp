@@ -80,7 +80,7 @@ namespace exqudens::test {
       cout << usage << endl;
     } else {
       for (auto& [name, value] : testMap) {
-        if (testNames.contains(name)) {
+        if (testNames.count(name) > 0) {
           Any object = std::get<1>(value);
           TestMethod function = std::get<2>(value);
           if (result == 0) {

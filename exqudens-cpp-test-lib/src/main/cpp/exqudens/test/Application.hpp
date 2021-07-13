@@ -104,7 +104,7 @@ namespace exqudens::test {
 
       template <typename T>
       std::tuple<String, Any> getOrCreateTestNameObject(String testName) {
-        if (testMap.contains(testName)) {
+        if (testMap.count(testName) > 0) {
           String message;
           message += "Test map contains 'testName': ";
           message += testName;
