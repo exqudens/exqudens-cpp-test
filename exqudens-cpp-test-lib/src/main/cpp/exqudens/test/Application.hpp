@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <chrono>
 #include <any>
 #include <vector>
 #include <set>
@@ -101,6 +102,8 @@ namespace exqudens::test {
       std::tuple<bool, bool, Set<String>> parseCommandLineArguments(Vector<String>& args);
 
       int runTest(Any object, TestMethod function, String name);
+
+      std::string toString(std::chrono::nanoseconds nanoseconds, bool extended = false);
 
       template <typename T>
       std::tuple<String, Any> getOrCreateTestNameObject(String testName) {

@@ -1,3 +1,5 @@
+#include <chrono>
+
 #include "exqudens/test/Application.hpp"
 
 namespace exqudens::test {
@@ -163,7 +165,11 @@ namespace exqudens::test {
     }
 
     try {
+      auto start = std::chrono::high_resolution_clock::now();
       function();
+      auto stop = std::chrono::high_resolution_clock::now();
+      std::chrono::nanoseconds diff(std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start).count());
+      cout << "TIME:" << toString(diff, true) << endl;
       result = 0;
     } catch (Exception& e) {
       cerr << "ERROR: " << e.what() << endl;
@@ -181,6 +187,45 @@ namespace exqudens::test {
     }
 
     return result;
+  }
+
+  std::string Application::toString(std::chrono::nanoseconds nanoSeconds, bool extended) {
+    std::string string;
+
+    if (!extended) {
+      string += std::to_string(nanoSeconds.count());
+      return string;
+    }
+
+    std::chrono::microseconds microSeconds;
+    std::chrono::milliseconds milliSeconds;
+    std::chrono::seconds seconds;
+    std::chrono::minutes minutes;
+    std::chrono::hours hours;
+
+    microSeconds = std::chrono::duration_cast<std::chrono::microseconds>(nanoSeconds);
+    nanoSeconds -= std::chrono::duration_cast<std::chrono::nanoseconds>(microSeconds);
+
+    milliSeconds = std::chrono::duration_cast<std::chrono::milliseconds>(microSeconds);
+    microSeconds -= std::chrono::duration_cast<std::chrono::microseconds>(milliSeconds);
+
+    seconds = std::chrono::duration_cast<std::chrono::seconds>(milliSeconds);
+    milliSeconds -= std::chrono::duration_cast<std::chrono::milliseconds>(seconds);
+
+    minutes = std::chrono::duration_cast<std::chrono::minutes>(seconds);
+    seconds -= std::chrono::duration_cast<std::chrono::seconds>(minutes);
+
+    hours = std::chrono::duration_cast<std::chrono::hours>(minutes);
+    minutes -= std::chrono::duration_cast<std::chrono::minutes>(hours);
+
+    if (hours.count() > 0) string += String(" hours: ").append(std::to_string(hours.count()));
+    if (minutes.count() > 0) string += String(" minutes: ").append(std::to_string(minutes.count()));
+    if (seconds.count() > 0) string += String(" seconds: ").append(std::to_string(seconds.count()));
+    if (milliSeconds.count() > 0) string += String(" milliSeconds: ").append(std::to_string(milliSeconds.count()));
+    if (microSeconds.count() > 0) string += String(" microSeconds: ").append(std::to_string(microSeconds.count()));
+    if (nanoSeconds.count() > 0) string += String(" nanoSeconds: ").append(std::to_string(nanoSeconds.count()));
+
+    return string;
   }
 
   void Application::addTestFunction(TestFunctionReference testFunctionReference, String testName) {
