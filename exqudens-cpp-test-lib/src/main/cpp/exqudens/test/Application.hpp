@@ -4,8 +4,6 @@
 #include <chrono>
 #include <any>
 #include <vector>
-#include <set>
-#include <map>
 #include <tuple>
 #include <functional>
 #include <exception>
@@ -14,10 +12,8 @@
 
 namespace exqudens::test {
 
-  template <typename T>             using Vector              = std::vector<T>;
-  template <typename T>             using Set                 = std::set<T>;
-  template <typename K, typename V> using Map                 = std::map<K, V>;
-  template <typename T>             using TestMethodReference = void(T::*)();
+  template <typename T> using Vector              = std::vector<T>;
+  template <typename T>  using TestMethodReference = void(T::*)();
 
   using String                = std::string;
   using Any                   = std::any;
@@ -41,7 +37,7 @@ namespace exqudens::test {
     private:
 
       Vector<String> commandLineArguments;
-      Map<String, std::tuple<String, Any, TestMethod>> testMap;
+      Vector<std::tuple<unsigned int, String, String, Any, TestMethod>> tests;
       bool addHeader;
       bool addFooter;
       bool addNewLine;
@@ -78,7 +74,7 @@ namespace exqudens::test {
         String testTypeName = std::get<0>(nameObject);
         Any testObject = std::get<1>(nameObject);
         TestMethod testFunction = std::bind(testMethodReference, std::any_cast<T>(testObject));
-        testMap[testName] = std::make_tuple(testTypeName, testObject, testFunction);
+        tests.push_back(std::make_tuple((unsigned int) tests.size(), testName, testTypeName, testObject, testFunction));
       }
 
       template <typename... ARGS>
@@ -99,15 +95,19 @@ namespace exqudens::test {
 
     private:
 
-      std::tuple<bool, bool, Set<String>> parseCommandLineArguments(Vector<String>& args);
+      bool isNumber(const String& string);
 
-      int runTest(Any object, TestMethod function, String name);
+      std::tuple<bool, bool, Vector<String>> parseCommandLineArguments(Vector<String>& args);
+
+      std::tuple<unsigned int, String, String, Any, TestMethod>* find(String testName);
+
+      int runTest(Any object, TestMethod function, unsigned int index, String name);
 
       std::string toString(std::chrono::nanoseconds nanoseconds, bool extended = false);
 
       template <typename T>
       std::tuple<String, Any> getOrCreateTestNameObject(String testName) {
-        if (testMap.count(testName) > 0) {
+        if (find(testName) != nullptr) {
           String message;
           message += "Test map contains 'testName': ";
           message += testName;
@@ -116,10 +116,10 @@ namespace exqudens::test {
         }
         String testTypeName = typeid(Any).name();
         Any testObject;
-        for (auto const& [key, value] : testMap) {
-          String currentTestTypeName = std::get<0>(value);
+        for (const std::tuple<unsigned int, String, String, Any, TestMethod>& entry : tests) {
+          String currentTestTypeName = std::get<2>(entry);
           if (testTypeName == currentTestTypeName) {
-            testObject = std::get<1>(value);
+            testObject = std::get<3>(entry);
             break;
           }
         }

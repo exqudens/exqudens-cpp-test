@@ -64,7 +64,8 @@ cmake_path(
     TO_NATIVE_PATH_LIST PROJECT_NATIVE_PATH_LIST
     NORMALIZE
 )
-add_custom_target("${PROJECT_NAME}"
+
+add_custom_target("${PROJECT_NAME}-1"
     COMMAND "${CMAKE_COMMAND}"
             -E
             env
@@ -73,6 +74,82 @@ add_custom_target("${PROJECT_NAME}"
             --tests
             all
     WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+    COMMENT "custom-target: '${PROJECT_NAME}-1'"
+    VERBATIM
+)
+
+add_custom_target("${PROJECT_NAME}-2"
+    COMMAND "${CMAKE_COMMAND}"
+            -E
+            env
+            "PATH=${PROJECT_NATIVE_PATH_LIST}"
+            "$<TARGET_FILE:${PROJECT_NAME}-executable>"
+            --tests
+            exqudens.other.testFunction1
+            exqudens.other.testFunction2
+            exqudens.other.OtherTests.testMethod1
+            exqudens.other.OtherTests.testMethod2
+    WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+    COMMENT "custom-target: '${PROJECT_NAME}-2'"
+    VERBATIM
+)
+
+add_custom_target("${PROJECT_NAME}-3"
+    COMMAND "${CMAKE_COMMAND}"
+            -E
+            env
+            "PATH=${PROJECT_NATIVE_PATH_LIST}"
+            "$<TARGET_FILE:${PROJECT_NAME}-executable>"
+            --tests
+            0
+            1
+            2
+            3
+    WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+    COMMENT "custom-target: '${PROJECT_NAME}-3'"
+    VERBATIM
+)
+
+add_custom_target("${PROJECT_NAME}-4"
+    COMMAND "${CMAKE_COMMAND}"
+            -E
+            env
+            "PATH=${PROJECT_NATIVE_PATH_LIST}"
+            "$<TARGET_FILE:${PROJECT_NAME}-executable>"
+            --tests
+            exqudens.other.testFunction2
+            exqudens.other.OtherTests.testMethod2
+    WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+    COMMENT "custom-target: '${PROJECT_NAME}-4'"
+    VERBATIM
+)
+
+add_custom_target("${PROJECT_NAME}-5"
+    COMMAND "${CMAKE_COMMAND}"
+            -E
+            env
+            "PATH=${PROJECT_NATIVE_PATH_LIST}"
+            "$<TARGET_FILE:${PROJECT_NAME}-executable>"
+            --tests
+            1
+            3
+    WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+    COMMENT "custom-target: '${PROJECT_NAME}-5'"
+    VERBATIM
+)
+
+add_custom_target("${PROJECT_NAME}"
+    COMMAND "${CMAKE_COMMAND}"
+            -E
+            echo
+            ALL TESTS PASSED
     COMMENT "custom-target: '${PROJECT_NAME}'"
     VERBATIM
+)
+add_dependencies("${PROJECT_NAME}"
+    "${PROJECT_NAME}-1"
+    "${PROJECT_NAME}-2"
+    "${PROJECT_NAME}-3"
+    "${PROJECT_NAME}-4"
+    "${PROJECT_NAME}-5"
 )

@@ -1,32 +1,9 @@
+#include <locale>
 #include <chrono>
 
 #include "exqudens/test/Application.hpp"
 
 namespace exqudens::test {
-
-  /*int Application::run(
-      int argc,
-      char** argv,
-      bool addHeader,
-      bool addFooter,
-      bool addNewLine,
-      char delimiterChar,
-      int delimiterSize,
-      bool addSpace,
-      bool addActionName
-  ) {
-    return Application(
-        argc,
-        argv,
-        addHeader,
-        addFooter,
-        addNewLine,
-        delimiterChar,
-        delimiterSize,
-        addSpace,
-        addActionName
-    ).run();
-  }*/
 
   Application::Application(
       int argc,
@@ -62,12 +39,12 @@ namespace exqudens::test {
 
     initialize();
 
-    std::tuple<bool, bool, Set<String>> config;
+    std::tuple<bool, bool, Vector<String>> config;
     config = parseCommandLineArguments(commandLineArguments);
 
     bool helpRequested = std::get<0>(config);
     bool failFast = std::get<1>(config);
-    Set<String> testNames = std::get<2>(config);
+    Vector<String> testTags = std::get<2>(config);
 
     if (helpRequested) {
       String usage("Usage:");
@@ -81,18 +58,60 @@ namespace exqudens::test {
       usage += VALUE_ALL_TESTS + " | names...";
       cout << usage << endl;
     } else {
-      for (auto& [name, value] : testMap) {
-        if (testNames.count(name) > 0) {
-          Any object = std::get<1>(value);
-          TestMethod function = std::get<2>(value);
+      if (testTags.size() == 1 && testTags.at(0) == VALUE_ALL_TESTS) {
+        for (unsigned int i = 0; i < tests.size(); i++) {
+          std::tuple<unsigned int, String, String, Any, TestMethod>& entry = tests.at(i);
+          String name = std::get<1>(entry);
+          Any object = std::get<3>(entry);
+          TestMethod function = std::get<4>(entry);
           if (result == 0) {
-            result = runTest(object, function, name);
+            result = runTest(object, function, i, name);
           } else {
             if (failFast) {
               break;
             } else {
-              runTest(object, function, name);
+              runTest(object, function, i, name);
             }
+          }
+        }
+      } else {
+        for (const String& tag : testTags) {
+          for (unsigned int i = 0; i < tests.size(); i++) {
+            std::tuple<unsigned int, String, String, Any, TestMethod>& entry = tests.at(i);
+            String name = std::get<1>(entry);
+            if (isNumber(tag)) {
+              unsigned int index = std::stoul(tag,nullptr,0);
+              if (i == index) {
+                Any object = std::get<3>(entry);
+                TestMethod function = std::get<4>(entry);
+                if (result == 0) {
+                  result = runTest(object, function, i, name);
+                } else {
+                  if (failFast) {
+                    break;
+                  } else {
+                    runTest(object, function, i, name);
+                  }
+                }
+              }
+            } else {
+              if (name == tag) {
+                Any object = std::get<3>(entry);
+                TestMethod function = std::get<4>(entry);
+                if (result == 0) {
+                  result = runTest(object, function, i, name);
+                } else {
+                  if (failFast) {
+                    break;
+                  } else {
+                    runTest(object, function, i, name);
+                  }
+                }
+              }
+            }
+          }
+          if (result != 0 && failFast) {
+            break;
           }
         }
       }
@@ -101,10 +120,19 @@ namespace exqudens::test {
     return result;
   }
 
-  std::tuple<bool, bool, Set<String>> Application::parseCommandLineArguments(Vector<String>& args) {
+  bool Application::isNumber(const String& string) {
+    for (const char& c : string) {
+      if (!std::isdigit(c)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  std::tuple<bool, bool, Vector<String>> Application::parseCommandLineArguments(Vector<String>& args) {
     bool helpRequested = false;
     bool failFast = false;
-    Set<String> testNames;
+    Vector<String> testTags;
     if (!commandLineArguments.empty()) {
       bool testNamesStarted = false;
       for (const String& commandLineArgument : commandLineArguments) {
@@ -122,21 +150,30 @@ namespace exqudens::test {
         }
         if (testNamesStarted) {
           if (VALUE_ALL_TESTS == commandLineArgument) {
-            for (auto& [key, value] : testMap) {
-              testNames.insert(key);
-            }
+            testTags.push_back(VALUE_ALL_TESTS);
             break;
           } else {
-            testNames.insert(commandLineArgument);
+            testTags.push_back(commandLineArgument);
             continue;
           }
         }
       }
     }
-    return std::make_tuple(helpRequested, failFast, testNames);
+    return std::make_tuple(helpRequested, failFast, testTags);
   }
 
-  int Application::runTest(Any object, TestMethod function, String name) {
+  std::tuple<unsigned int, String, String, Any, TestMethod>* Application::find(String testName) {
+    std::tuple<unsigned int, String, String, Any, TestMethod>* result = nullptr;
+    for (std::tuple<unsigned int, String, String, Any, TestMethod>& entry : tests) {
+      String name = std::get<1>(entry);
+      if (testName == name) {
+        result = &entry;
+      }
+    }
+    return result;
+  }
+
+  int Application::runTest(Any object, TestMethod function, unsigned int index, String name) {
     using std::cout;
     using std::cerr;
     using std::endl;
@@ -155,7 +192,7 @@ namespace exqudens::test {
         header.append("run test:");
         header.append(1, ' ');
       }
-      header.append(name);
+      header.append("[").append(std::to_string(index)).append("] ").append(name);
       if (addSpace) {
         header.append(1, ' ');
       }
@@ -233,7 +270,7 @@ namespace exqudens::test {
     String testTypeName = std::get<0>(nameObject);
     Any testObject = std::get<1>(nameObject);
     TestMethod testFunction = testFunctionReference;
-    testMap[testName] = std::make_tuple(testTypeName, testObject, testFunction);
+    tests.push_back(std::make_tuple((unsigned int) tests.size(), testName, testTypeName, testObject, testFunction));
   }
 
   void Application::addTestFunctions() {

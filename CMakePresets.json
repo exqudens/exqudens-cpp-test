@@ -104,7 +104,7 @@
       }
     },
     {
-      "name": "vs-host-x86-target-x86",
+      "name": "vs-windows-host-x86-target-x86",
       "hidden": true,
       "generator": "Ninja",
       "toolset": {
@@ -124,7 +124,7 @@
       }
     },
     {
-      "name": "vs-host-x86-target-x64",
+      "name": "vs-windows-host-x86-target-x64",
       "hidden": true,
       "generator": "Ninja",
       "toolset": {
@@ -145,124 +145,124 @@
     },
 
     {
-      "name": "ide-vs-host-x86-target-x86-release-shared",
-      "inherits": [ "vs-host-x86-target-x86", "release-shared" ],
+      "name": "ide-vs-windows-x86-release-shared",
+      "inherits": [ "vs-windows-host-x86-target-x86", "release-shared" ],
       "binaryDir": "${sourceDir}/vs-build/0"
     },
     {
-      "name": "ide-vs-host-x86-target-x86-release-static",
-      "inherits": [ "vs-host-x86-target-x86", "release-static" ],
+      "name": "ide-vs-windows-x86-release-static",
+      "inherits": [ "vs-windows-host-x86-target-x86", "release-static" ],
       "binaryDir": "${sourceDir}/vs-build/1"
     },
 
     {
-      "name": "ide-vs-host-x86-target-x64-release-shared",
-      "inherits": [ "vs-host-x86-target-x64", "release-shared" ],
+      "name": "ide-vs-windows-x86_x64-release-shared",
+      "inherits": [ "vs-windows-host-x86-target-x64", "release-shared" ],
       "binaryDir": "${sourceDir}/vs-build/2"
     },
     {
-      "name": "ide-vs-host-x86-target-x64-release-static",
-      "inherits": [ "vs-host-x86-target-x64", "release-static" ],
+      "name": "ide-vs-windows-x86_x64-release-static",
+      "inherits": [ "vs-windows-host-x86-target-x64", "release-static" ],
       "binaryDir": "${sourceDir}/vs-build/3"
     },
 
     {
-      "name": "cmd-windows-ninja-msvc-host-x86-target-x86-release-shared",
+      "name": "cmd-windows-ninja-msvc-x86-release-shared",
       "inherits": [ "windows-ninja-msvc", "release-shared" ],
       "binaryDir": "${sourceDir}/build/0"
     },
     {
-      "name": "cmd-windows-ninja-msvc-host-x86-target-x86-release-static",
+      "name": "cmd-windows-ninja-msvc-x86-release-static",
       "inherits": [ "windows-ninja-msvc", "release-static" ],
       "binaryDir": "${sourceDir}/build/1"
     },
 
     {
-      "name": "cmd-windows-ninja-msvc-host-x86-target-x64-release-shared",
+      "name": "cmd-windows-ninja-msvc-x86_x64-release-shared",
       "inherits": [ "windows-ninja-msvc", "release-shared" ],
       "binaryDir": "${sourceDir}/build/2"
     },
     {
-      "name": "cmd-windows-ninja-msvc-host-x86-target-x64-release-static",
+      "name": "cmd-windows-ninja-msvc-x86_x64-release-static",
       "inherits": [ "windows-ninja-msvc", "release-static" ],
       "binaryDir": "${sourceDir}/build/3"
     },
 
     {
-      "name": "cmd-windows-ninja-gcc-host-x86-target-x86-release-shared",
+      "name": "cmd-windows-ninja-gcc-x86-release-shared",
       "inherits": [ "windows-ninja-gcc", "release-shared" ],
       "binaryDir": "${sourceDir}/build/4"
     },
     {
-      "name": "cmd-windows-ninja-gcc-host-x86-target-x86-release-static",
+      "name": "cmd-windows-ninja-gcc-x86-release-static",
       "inherits": [ "windows-ninja-gcc", "release-static" ],
       "binaryDir": "${sourceDir}/build/5"
     },
 
     {
-      "name": "cmd-windows-ninja-gcc-host-x86-target-x64-release-shared",
+      "name": "cmd-windows-ninja-gcc-x86_x64-release-shared",
       "inherits": [ "windows-ninja-gcc", "release-shared" ],
       "binaryDir": "${sourceDir}/build/6"
     },
     {
-      "name": "cmd-windows-ninja-gcc-host-x86-target-x64-release-static",
+      "name": "cmd-windows-ninja-gcc-x86_x64-release-static",
       "inherits": [ "windows-ninja-gcc", "release-static" ],
       "binaryDir": "${sourceDir}/build/7"
     }
   ],
   "buildPresets": [
     {
-      "name": "ide-vs-host-x86-target-x86-release-shared",
-      "configurePreset": "ide-vs-host-x86-target-x86-release-shared"
+      "name": "ide-vs-windows-x86-release-shared",
+      "configurePreset": "ide-vs-windows-x86-release-shared"
     },
     {
-      "name": "ide-vs-host-x86-target-x86-release-static",
-      "configurePreset": "ide-vs-host-x86-target-x86-release-static"
-    },
-
-    {
-      "name": "ide-vs-host-x86-target-x64-release-shared",
-      "configurePreset": "ide-vs-host-x86-target-x64-release-shared"
-    },
-    {
-      "name": "ide-vs-host-x86-target-x64-release-static",
-      "configurePreset": "ide-vs-host-x86-target-x64-release-static"
+      "name": "ide-vs-windows-x86-release-static",
+      "configurePreset": "ide-vs-windows-x86-release-static"
     },
 
     {
-      "name": "cmd-windows-ninja-msvc-host-x86-target-x86-release-shared",
-      "configurePreset": "cmd-windows-ninja-msvc-host-x86-target-x86-release-shared"
+      "name": "ide-vs-windows-x86_x64-release-shared",
+      "configurePreset": "ide-vs-windows-x86_x64-release-shared"
     },
     {
-      "name": "cmd-windows-ninja-msvc-host-x86-target-x86-release-static",
-      "configurePreset": "cmd-windows-ninja-msvc-host-x86-target-x86-release-static"
-    },
-
-    {
-      "name": "cmd-windows-ninja-msvc-host-x86-target-x64-release-shared",
-      "configurePreset": "cmd-windows-ninja-msvc-host-x86-target-x64-release-shared"
-    },
-    {
-      "name": "cmd-windows-ninja-msvc-host-x86-target-x64-release-static",
-      "configurePreset": "cmd-windows-ninja-msvc-host-x86-target-x64-release-static"
+      "name": "ide-vs-windows-x86_x64-release-static",
+      "configurePreset": "ide-vs-windows-x86_x64-release-static"
     },
 
     {
-      "name": "cmd-windows-ninja-gcc-host-x86-target-x86-release-shared",
-      "configurePreset": "cmd-windows-ninja-gcc-host-x86-target-x86-release-shared"
+      "name": "cmd-windows-ninja-msvc-x86-release-shared",
+      "configurePreset": "cmd-windows-ninja-msvc-x86-release-shared"
     },
     {
-      "name": "cmd-windows-ninja-gcc-host-x86-target-x86-release-static",
-      "configurePreset": "cmd-windows-ninja-gcc-host-x86-target-x86-release-static"
+      "name": "cmd-windows-ninja-msvc-x86-release-static",
+      "configurePreset": "cmd-windows-ninja-msvc-x86-release-static"
     },
 
     {
-      "name": "cmd-windows-ninja-gcc-host-x86-target-x64-release-shared",
-      "configurePreset": "cmd-windows-ninja-gcc-host-x86-target-x64-release-shared"
+      "name": "cmd-windows-ninja-msvc-x86_x64-release-shared",
+      "configurePreset": "cmd-windows-ninja-msvc-x86_x64-release-shared"
     },
     {
-      "name": "cmd-windows-ninja-gcc-host-x86-target-x64-release-static",
-      "configurePreset": "cmd-windows-ninja-gcc-host-x86-target-x64-release-static"
+      "name": "cmd-windows-ninja-msvc-x86_x64-release-static",
+      "configurePreset": "cmd-windows-ninja-msvc-x86_x64-release-static"
+    },
+
+    {
+      "name": "cmd-windows-ninja-gcc-x86-release-shared",
+      "configurePreset": "cmd-windows-ninja-gcc-x86-release-shared"
+    },
+    {
+      "name": "cmd-windows-ninja-gcc-x86-release-static",
+      "configurePreset": "cmd-windows-ninja-gcc-x86-release-static"
+    },
+
+    {
+      "name": "cmd-windows-ninja-gcc-x86_x64-release-shared",
+      "configurePreset": "cmd-windows-ninja-gcc-x86_x64-release-shared"
+    },
+    {
+      "name": "cmd-windows-ninja-gcc-x86_x64-release-static",
+      "configurePreset": "cmd-windows-ninja-gcc-x86_x64-release-static"
     }
   ]
 }
