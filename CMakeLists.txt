@@ -75,6 +75,9 @@ endif()
 include("util.cmake")
 include("conan.cmake")
 
+set_conan_boolean(CONAN_BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}")
+set_conan_msvc_compiler_runtime(CONAN_MSVC_COMPILER_RUNTIME "${CMAKE_MSVC_RUNTIME_LIBRARY}")
+
 if(NOT DEFINED "CONAN_PROGRAM_PATH" AND NOT DEFINED "CONAN_COMMAND")
     set_conan_path(CONAN_PROGRAM_PATH "$ENV{PATH}")
     set_conan_command(CONAN_COMMAND "${CONAN_PROGRAM_PATH}")

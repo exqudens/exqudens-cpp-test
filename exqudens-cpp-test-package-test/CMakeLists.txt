@@ -42,7 +42,7 @@ if(DEFINED "CONAN_COMMAND")
 
     set_conan_options(CONAN_OPTIONS
         "${BUILD_SHARED_LIBS}"
-        ${CONAN_PACKAGE_NAMES}
+        "${CMAKE_PROJECT_NAME}-lib:shared=${CONAN_BUILD_SHARED_LIBS}"
     )
 
     add_custom_target_conan_install("${PROJECT_NAME}-conan-install"

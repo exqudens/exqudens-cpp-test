@@ -12,10 +12,6 @@ class ConanConfiguration(ConanFile):
     def set_version(self):
         self.version = tools.load(path.join(path.dirname(path.dirname(path.abspath(__file__))), "version.txt")).strip()
 
-    def configure(self):
-        if self.settings.compiler == "Visual Studio":
-            del self.settings.compiler.runtime
-
     def package(self):
         self.copy("*")
 
